@@ -7,7 +7,7 @@ if GetMyHero().charName ~= "MissFortune" then
 return 
 end
 
-local version = 0.01
+local version = 0.02
 local AUTOUPDATE = true
 local SCRIPT_NAME = "SetSailMissFortune"
 local ultiCasting = false
@@ -52,11 +52,13 @@ local Rrange, Rwidth, Rspeed, Rdelay = 1400, 400, 780, 2.5
 --[[ Callback 1 ]]--
 function OnLoad()
 	_LoadLib()
-    PrintChat("<font color=\"#FF1155\">Set Sail! (Version:"..version.." Loaded) by Gungho Alvin </font>")
+    
 	if myHero:GetSpellData(SUMMONER_1).name:find("SummonerDot") then
         castigo = SUMMONER_1
+		PrintChat("<font color=\"#FF1155\"><b>Set Sail! (Version:"..version.." Loaded) </b></font><font color=\"#FFFFFF\">by Gungho Alvin </font>")
     elseif myHero:GetSpellData(SUMMONER_2).name:find("SummonerDot") then
         castigo = SUMMONER_2
+		PrintChat("<font color=\"#FF1155\"><b>Set Sail! (Version:"..version.." Loaded) </b></font><font color=\"#FFFFFF\">by Gungho Alvin </font>")
     end
 end
 
@@ -172,7 +174,7 @@ function _Combo()
 	local target = STS:GetTarget(Erange)
 	if MFMenu.Combo.comboE and myHero:CanUseSpell(_E) == READY and target ~= nil and (myHero.mana / myHero.maxMana * 100) >= MFMenu.Combo.ManacheckCE then
 	local CastPosition = VP:GetLineCastPosition(target, Edelay, Ewidth, Erange, Espeed, myHero, true)
-	   if GetDistance(target) < Erange and GetDistance(target) > 600 and myHero:CanUseSpell(_E) == READY then
+	   if GetDistance(target) < Erange and GetDistance(target) > 650 and myHero:CanUseSpell(_E) == READY then
 	      CastSpell(_E, CastPosition.x, CastPosition.z)
        end
     end	
