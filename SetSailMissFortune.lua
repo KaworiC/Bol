@@ -7,14 +7,12 @@ if GetMyHero().charName ~= "MissFortune" then
 return 
 end
 
-local version = 0.02
+local version = 0.03
 local AUTOUPDATE = true
 local SCRIPT_NAME = "SetSailMissFortune"
 local ultiCasting = false
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+--LIB
 local SOURCELIB_URL = "https://raw.github.com/TheRealSource/public/master/common/SourceLib.lua"
 local SOURCELIB_PATH = LIB_PATH.."SourceLib.lua"
 
@@ -37,19 +35,15 @@ local RequireI = Require("SourceLib")
 	RequireI:Check()
 
 if RequireI.downloadNeeded == true then return end
+--END LIB
 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
--- Spell data's
+-- Spell
 local Qrange, Qwidth, Qspeed, Qdelay = 650, 1, 1400, 0.29	
 local Wrange, Wwidth, Wspeed, Wdelay = 650, 100, 1400, 0.5	
 local Erange, Ewidth, Espeed, Edelay = 800, 300, 500, 0.65	
 local Rrange, Rwidth, Rspeed, Rdelay = 1400, 400, 780, 2.5
 		  
---[[ Callback 1 ]]--
+
 function OnLoad()
 	_LoadLib()
     
@@ -62,11 +56,11 @@ function OnLoad()
     end
 end
 
--- Looks like drawing with OnDraw fix FPS drop
+-- Drawing
 function OnDraw()
    if MFMenu.Drawing.DrawAA then
       if MFMenu.Drawing.lowfpscircle then
-	     -- Lag free circle here, brazil style
+	     -- Lag free circle
          DrawCircle3D(myHero.x, myHero.y, myHero.z, SOWi:MyRange() + 100, 1, TARGB({200, 150, 0, 200}), 100)
 	  else
          -- Draw AA hero range
@@ -77,15 +71,12 @@ end
 
 function OnTick()
 	CheckUlt()
-   -- if autolevel on then autolevel spell
    if MFMenu.Extra.AutoLev then
       _AutoLevel()
    end	
-   -- if Space (32) pressed then combo
    if MFMenu.Combo.combokey then
       _Combo() 
    end   
-   -- if key C pressed then harass
    if MFMenu.Harass.harasskey then
       _Harass() 
    end
@@ -96,8 +87,6 @@ function OnTick()
 end
 
 
---[[ Personal Function ]]--
-
 -- Load lib
 function _LoadLib()
     VP = VPrediction(true)
@@ -106,7 +95,8 @@ function _LoadLib()
 	
 	_LoadMenu()
 end
--- Load my menu adding SOW Orbwalking..
+
+-- Load menu
 function _LoadMenu()
     MFMenu = scriptConfig("Set Sail Miss Fortune "..version, "Set Sail Miss Fortune "..version)
 	
@@ -129,23 +119,24 @@ function _LoadMenu()
 	MFMenu.Combo:addParam("ManacheckCQ", "Mana manager Q", SCRIPT_PARAM_SLICE, 10, 1, 100)
 	MFMenu.Combo:addParam("comboW", "Use W", SCRIPT_PARAM_ONOFF, true)
 	MFMenu.Combo:addParam("ManacheckCW", "Mana manager W", SCRIPT_PARAM_SLICE, 10, 1, 100)
-	MFMenu.Combo:addParam("comboE", "Use E when Enemy getting far", SCRIPT_PARAM_ONOFF, true)
+	MFMenu.Combo:addParam("comboE", "Use E when Enemy farther than AA/Q range", SCRIPT_PARAM_ONOFF, true)
 	MFMenu.Combo:addParam("ManacheckCE", "Mana manager E", SCRIPT_PARAM_SLICE, 30, 1, 100)
 	MFMenu.Combo:addParam("comboRinfo","Use R when enemy killable and farther than AA/Q range",SCRIPT_PARAM_INFO,"")
 	MFMenu.Combo:addParam("comboR", "   |===========================>", SCRIPT_PARAM_ONOFF, true)
 	
 		
 	MFMenu:addSubMenu("Harass", "Harass")
-	MFMenu.Harass:addParam("harasskey", "Harass when Mixed mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
-	MFMenu.Harass:addParam("harasskey2", "Harass when Laneclear mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+	MFMenu.Harass:addParam("harasskey", "Harass (Mixed mode)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
+	MFMenu.Harass:addParam("harasskey2", "Harass (Laneclear mode)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 	MFMenu.Harass:addParam("harassQ", "Use Q", SCRIPT_PARAM_ONOFF, true)
 	MFMenu.Harass:addParam("Manacheck", "Mana manager", SCRIPT_PARAM_SLICE, 50, 1, 100)
 		
 	MFMenu:addSubMenu("Extra", "Extra")
-	MFMenu.Extra:addParam("AutoLev", "Auto level skill", SCRIPT_PARAM_ONOFF, false)
+	MFMenu.Extra:addParam("AutoLev", "Auto level skill(1,3,1,2=>RQWE)", SCRIPT_PARAM_ONOFF, false)
 	
 end
 
+--Check MF ULT
 function CheckUlt()
     if TargetHaveBuff("missfortunebulletsound", myHero) then
          ultiCasting = true
@@ -154,7 +145,6 @@ function CheckUlt()
     end
 end
 
--- Thats the combo function, declaring in range target, checking if key pressed, if spell ready, getting prediction using VPred, casting spell
 function _Combo()
     -- Cast Q
     local target = STS:GetTarget(Qrange)
@@ -200,12 +190,11 @@ function _Combo()
 	      CastSpell(castigo, target)
        end
     end
-
 end
 
--- That's the harass function hell yeahh
+-- Harass
 function _Harass()
-    -- cast Q harass
+    -- Cast Q
     local target = STS:GetTarget(Qrange)
     if MFMenu.Harass.harassQ and myHero:CanUseSpell(_Q) == READY and target ~= nil and (myHero.mana / myHero.maxMana * 100) >= MFMenu.Harass.Manacheck then
 	   if GetDistance(target) <= Qrange - 150 and myHero:CanUseSpell(_Q) == READY then
@@ -214,7 +203,7 @@ function _Harass()
    end	
 end
 
--- Auto level spell function
+-- Auto level spell
 function _AutoLevel()
    Sequence = { 1,3,1,2,1,4,1,2,1,2,4,2,2,3,3,4,3,3 }
    autoLevelSetSequence(Sequence)
