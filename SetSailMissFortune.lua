@@ -7,7 +7,7 @@ if GetMyHero().charName ~= "MissFortune" then
 return 
 end
 
-local version = 0.07
+local version = 0.06
 local AUTOUPDATE = true
 local SCRIPT_NAME = "SetSailMissFortune"
 local ultiCasting = false
@@ -181,8 +181,7 @@ function _Combo()
 	if myHero:CanUseSpell(_R) == READY then
 		if MFMenu.Combo.comboR and target ~= nil then
 			local CastPosition = VP:GetLineCastPosition(target, Rdelay, Rwidth, Rrange, Rspeed, myHero, true)
-			if GetDistance(target) < Rrange - 200 and GetDistance(target) > 700 and myHero:CanUseSpell(_R) == READY and getDmg("R", target, myHero)*8 > target.health then
-				MFMenu.Orbwalker.Enabled = false
+			if GetDistance(target) < Rrange - 100 and GetDistance(target) > 700 and myHero:CanUseSpell(_R) == READY and getDmg("R", target, myHero)*8 > target.health then
 				CastSpell(_R, CastPosition.x, CastPosition.z)
 			end
 		end
