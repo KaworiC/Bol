@@ -7,7 +7,7 @@ if GetMyHero().charName ~= "MissFortune" then
 return 
 end
 
-local version = 0.07
+local version = 0.08
 local AUTOUPDATE = true
 local SCRIPT_NAME = "SetSailMissFortune"
 local ultiCasting = false
@@ -142,15 +142,11 @@ end
 function _CheckUlt()
     if TargetHaveBuff("missfortunebulletsound", myHero) then
          ultiCasting = true
+		 MFMenu.Orbwalker.Enabled = false
     else
          ultiCasting = false
+		 MFMenu.Orbwalker.Enabled = true
     end
-	
-	if ultiCasting == true then 
-		MFMenu.Orbwalker.Enabled = false
-	else
-		MFMenu.Orbwalker.Enabled = true
-	end
 end
 
 function _Combo()
@@ -184,6 +180,7 @@ function _Combo()
 			if GetDistance(target) < Rrange - 200 and GetDistance(target) > 700 and myHero:CanUseSpell(_R) == READY and getDmg("R", target, myHero)*8 > target.health then
 				MFMenu.Orbwalker.Enabled = false
 				CastSpell(_R, CastPosition.x, CastPosition.z)
+				MFMenu.Orbwalker.Enabled = false
 			end
 		end
 	end	
