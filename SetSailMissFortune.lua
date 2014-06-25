@@ -7,7 +7,7 @@ if GetMyHero().charName ~= "MissFortune" then
 return 
 end
 
-local version = 0.05
+local version = 0.06
 local AUTOUPDATE = true
 local SCRIPT_NAME = "SetSailMissFortune"
 local ultiCasting = false
@@ -70,19 +70,21 @@ function OnDraw()
 end
 
 function OnTick()
-	CheckUlt()
-   if MFMenu.Extra.AutoLev then
-      _AutoLevel()
-   end	
-   if MFMenu.Combo.combokey then
-      _Combo() 
-   end   
-   if MFMenu.Harass.harasskey then
-      _Harass() 
-   end
-   if MFMenu.Harass.harasskey2 then
-      _Harass() 
-   end
+	if MFMenu.Combo.comboR then
+		_CheckUlt()
+	end	
+	if MFMenu.Extra.AutoLev then
+		_AutoLevel()
+	end	
+	if MFMenu.Combo.combokey then
+		_Combo() 
+	end   
+	if MFMenu.Harass.harasskey then
+		_Harass() 
+	end
+	if MFMenu.Harass.harasskey2 then
+		_Harass() 
+	end
   
 end
 
@@ -137,12 +139,18 @@ function _LoadMenu()
 end
 
 --Check MF ULT
-function CheckUlt()
+function _CheckUlt()
     if TargetHaveBuff("missfortunebulletsound", myHero) then
          ultiCasting = true
     else
          ultiCasting = false
     end
+	
+	if ultiCasting == true then 
+		MFMenu.Orbwalker.Enabled = false
+	else
+		MFMenu.Orbwalker.Enabled = true
+	end
 end
 
 function _Combo()
@@ -178,11 +186,6 @@ function _Combo()
 			end
 		end
 	end	
-	if ultiCasting == true then 
-		MFMenu.Orbwalker.Enabled = false
-	else
-		MFMenu.Orbwalker.Enabled = true
-	end
 	-- Cast ignite
     local target = STS:GetTarget(600)
     if MFMenu.Combo.IGNITE and target ~= nil then
