@@ -7,7 +7,7 @@ if GetMyHero().charName ~= "MissFortune" then
 return 
 end
 
-local version = 0.04
+local version = 0.05
 local AUTOUPDATE = true
 local SCRIPT_NAME = "SetSailMissFortune"
 local ultiCasting = false
@@ -38,9 +38,9 @@ if RequireI.downloadNeeded == true then return end
 --END LIB
 
 -- Spell
-local Qrange, Qwidth, Qspeed, Qdelay = 650, 1, 1400, 0.29	
-local Wrange, Wwidth, Wspeed, Wdelay = 650, 100, 1400, 0.5	
-local Erange, Ewidth, Espeed, Edelay = 800, 300, 500, 0.65	
+local Qrange, Qwidth, Qspeed, Qdelay = 650, 1, 1400, 0.29
+local Wrange, Wwidth, Wspeed, Wdelay = 650, 100, 1400, 0.5
+local Erange, Ewidth, Espeed, Edelay = 800, 300, 500, 0.65
 local Rrange, Rwidth, Rspeed, Rdelay = 1400, 400, 780, 2.5
 		  
 
@@ -132,7 +132,7 @@ function _LoadMenu()
 	MFMenu.Harass:addParam("Manacheck", "Mana manager", SCRIPT_PARAM_SLICE, 50, 1, 100)
 		
 	MFMenu:addSubMenu("Extra", "Extra")
-	MFMenu.Extra:addParam("AutoLev", "Auto level skill(1,3,1,2=>RQWE)", SCRIPT_PARAM_ONOFF, false)
+	MFMenu.Extra:addParam("AutoLev", "Auto level skill(Q,E,Q,W=>RQWE)", SCRIPT_PARAM_ONOFF, false)
 	
 end
 
@@ -149,7 +149,7 @@ function _Combo()
     -- Cast Q
     local target = STS:GetTarget(Qrange)
     if MFMenu.Combo.comboQ and myHero:CanUseSpell(_Q) == READY and target ~= nil and (myHero.mana / myHero.maxMana * 100) >= MFMenu.Combo.ManacheckCQ then
-	   if GetDistance(target) <= Qrange - 70 and myHero:CanUseSpell(_Q) == READY then
+	   if GetDistance(target) <= Qrange and myHero:CanUseSpell(_Q) == READY then
 	      CastSpell(_Q, target)
        end
     end	
@@ -164,7 +164,7 @@ function _Combo()
 	local target = STS:GetTarget(Erange)
 	if MFMenu.Combo.comboE and myHero:CanUseSpell(_E) == READY and target ~= nil and (myHero.mana / myHero.maxMana * 100) >= MFMenu.Combo.ManacheckCE then
 	local CastPosition = VP:GetLineCastPosition(target, Edelay, Ewidth, Erange, Espeed, myHero, true)
-	   if GetDistance(target) < Erange and GetDistance(target) > 650 and myHero:CanUseSpell(_E) == READY then
+	   if GetDistance(target) <= Erange and GetDistance(target) > 650 and myHero:CanUseSpell(_E) == READY then
 	      CastSpell(_E, CastPosition.x, CastPosition.z)
        end
     end	
@@ -197,7 +197,7 @@ function _Harass()
     -- Cast Q
     local target = STS:GetTarget(Qrange)
     if MFMenu.Harass.harassQ and myHero:CanUseSpell(_Q) == READY and target ~= nil and (myHero.mana / myHero.maxMana * 100) >= MFMenu.Harass.Manacheck then
-	   if GetDistance(target) <= Qrange - 150 and myHero:CanUseSpell(_Q) == READY then
+	   if GetDistance(target) <= Qrange and myHero:CanUseSpell(_Q) == READY then
 	      CastSpell(_Q, target)
        end
    end	
