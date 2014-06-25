@@ -134,7 +134,7 @@ function _LoadMenu()
 	MFMenu.Harass:addParam("Manacheck", "Mana manager", SCRIPT_PARAM_SLICE, 50, 1, 100)
 		
 	MFMenu:addSubMenu("Extra", "Extra")
-	MFMenu.Extra:addParam("AutoLev", "Auto level skill(Q,E,Q,W=>RQWE)", SCRIPT_PARAM_ONOFF, false)
+	MFMenu.Extra:addParam("AutoLev", "Auto level skill(Q,E,Q,W=>RQWE)", SCRIPT_PARAM_ONOFF, true)
 	
 end
 
